@@ -319,11 +319,16 @@ int main(int argc, char *argv[])
 						int sc = mcinstall_get_status_code(mis);
 						fprintf(stderr, "Could not install DEP Cloud Config '%s', status code: 0x%x\n", param, sc);
 				    }
+                    plist_free(pdata);
+                } else if (pdata) {
+                    fprintf(stderr, "ERROR: unexpected node type in cloudconfig plist (not PLIST_DICT)\n");
+                    res = -1;
+                    plist_free(pdata);
 				} else {
-					fprintf(stderr, "ERROR: unexpected node type in cloudconfig plist (not PLIST_DICT)\n");
+					fprintf(stderr, "ERROR: cloudconfig data was NULL\n");
 					res = -1;
 				}
-                plist_free(pdata);
+                
 
 
 				
