@@ -30,8 +30,8 @@
 #include <stdlib.h>
 #include <errno.h>
 #include <time.h>
-#include <unistd.h>
 #ifndef WIN32
+#include <unistd.h>
 #include <signal.h>
 #endif
 
