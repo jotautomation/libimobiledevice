@@ -156,7 +156,7 @@ LIBIMOBILEDEVICE_API debugserver_error_t debugserver_client_receive_with_timeout
 		*received = (uint32_t)bytes;
 	}
 
-	return res;
+	return (bytes > 0) ? DEBUGSERVER_E_SUCCESS : res;
 }
 
 LIBIMOBILEDEVICE_API debugserver_error_t debugserver_client_receive(debugserver_client_t client, char* data, uint32_t size, uint32_t *received)
@@ -566,7 +566,7 @@ LIBIMOBILEDEVICE_API debugserver_error_t debugserver_client_set_environment_hex_
 	return result;
 }
 
-LIBIMOBILEDEVICE_API debugserver_error_t debugserver_client_set_argv(debugserver_client_t client, int argc, char* argv[], char** response)
+LIBIMOBILEDEVICE_API debugserver_error_t debugserver_client_set_argv(debugserver_client_t client, int argc, const char* argv[], char** response)
 {
 	if (!client || !argc)
 		return DEBUGSERVER_E_INVALID_ARG;

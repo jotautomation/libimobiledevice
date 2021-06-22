@@ -36,7 +36,9 @@
 #else
 #include <gcrypt.h>
 #endif
+#ifndef _MSC_VER
 #include <unistd.h>
+#endif
 #include <ctype.h>
 #include <time.h>
 
@@ -46,6 +48,19 @@
 #include <libimobiledevice/notification_proxy.h>
 #include <libimobiledevice/afc.h>
 #include "common/utils.h"
+
+#ifdef _MSC_VER
+void usleep(DWORD waitTime) {
+    LARGE_INTEGER perfCnt, start, now;
+
+    QueryPerformanceFrequency(&perfCnt);
+    QueryPerformanceCounter(&start);
+
+    do {
+        QueryPerformanceCounter((LARGE_INTEGER*)&now);
+    } while ((now.QuadPart - start.QuadPart) / (float)(perfCnt.QuadPart) * 1000 * 1000 < waitTime);
+}
+#endif
 
 #define MOBILEBACKUP_SERVICE_NAME "com.apple.mobilebackup"
 #define NP_SERVICE_NAME "com.apple.mobile.notification_proxy"

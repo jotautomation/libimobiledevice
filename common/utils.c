@@ -30,7 +30,13 @@
 #include <stdlib.h>
 #include <string.h>
 #include <time.h>
+
+#ifdef _MSC_VER
+#include <winsock2.h>
+#else
 #include <sys/time.h>
+#endif
+
 #include <inttypes.h>
 #include <ctype.h>
 
@@ -177,9 +183,31 @@ char *string_build_path(const char *elem, ...)
 
 	va_start(args, elem);
 	arg = va_arg(args, char*);
+
+	int oldlen = 0;
+	int newlen = 0;
+
 	while (arg) {
+#ifdef WIN32
+		strcat(out, "\\");
+#else
 		strcat(out, "/");
+#endif
 		strcat(out, arg);
+		newlen = strlen(out);
+
+#ifdef WIN32
+		for (int i = oldlen; i < newlen; i++)
+		{
+			if (out[i] == '/')
+			{
+				out[i] = '\\';
+			}
+		}
+#endif
+
+		oldlen = newlen;
+
 		arg = va_arg(args, char*);
 	}
 	va_end(args);
@@ -472,7 +500,7 @@ static void plist_node_print_to_stream(plist_t node, int* indent_level, FILE* st
 	case PLIST_DATE:
 		plist_get_date_val(node, (int32_t*)&tv.tv_sec, (int32_t*)&tv.tv_usec);
 		{
-			time_t ti = (time_t)tv.tv_sec;
+			time_t ti = (time_t)tv.tv_sec + MAC_EPOCH;
 			struct tm *btime = localtime(&ti);
 			if (btime) {
 				s = (char*)malloc(24);

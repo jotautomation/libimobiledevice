@@ -40,10 +40,16 @@
 #endif
 
 static int debug_level;
+static idevice_debug_cb_t cb = NULL;
 
 void internal_set_debug_level(int level)
 {
 	debug_level = level;
+}
+
+void internal_set_debug_callback(idevice_debug_cb_t callback)
+{
+	cb = callback;
 }
 
 #define MAX_PRINT_LEN 16*1024
@@ -65,17 +71,25 @@ static void debug_print_line(const char *func, const char *file, int line, const
 
 	/* trim ending newlines */
 
-	/* print header */
-	fprintf(stderr, "%s: ", header);
+	if (!cb)
+	{
+		/* print header */
+		fprintf(stderr, "%s: ", header);
 
-	/* print actual debug content */
-	fprintf(stderr, "%s\n", buffer);
+		/* print actual debug content */
+		fprintf(stderr, "%s\n", buffer);
+	}
+	else
+	{
+		cb(header);
+		cb(buffer);
+	}
 
 	free (header);
 }
 #endif
 
-void debug_info_real(const char *func, const char *file, int line, const char *format, ...)
+LIBIMOBILEDEVICE_API_MSC void debug_info_real(const char *func, const char *file, int line, const char *format, ...)
 {
 #ifndef STRIP_DEBUG_CODE
 	va_list args;
@@ -102,30 +116,53 @@ void debug_buffer(const char *data, const int length)
 	int j;
 	unsigned char c;
 
-	if (debug_level) {
+	char line[80];
+	int pos;
+
+	if (debug_level > 1) {
 		for (i = 0; i < length; i += 16) {
-			fprintf(stderr, "%04x: ", i);
+			pos = 0;
+
+			pos += sprintf(&line[pos], "%04x: ", i);
+
 			for (j = 0; j < 16; j++) {
 				if (i + j >= length) {
-					fprintf(stderr, "   ");
+					pos += sprintf(&line[pos], "   ");
 					continue;
 				}
-				fprintf(stderr, "%02x ", *(data + i + j) & 0xff);
+				pos += sprintf(&line[pos], "%02x ", *(data + i + j) & 0xff);
 			}
-			fprintf(stderr, "  | ");
+			pos += sprintf(&line[pos], "  | ");
 			for (j = 0; j < 16; j++) {
 				if (i + j >= length)
 					break;
 				c = *(data + i + j);
 				if ((c < 32) || (c > 127)) {
-					fprintf(stderr, ".");
+					pos += sprintf(&line[pos], ".");
 					continue;
 				}
-				fprintf(stderr, "%c", c);
+				pos += sprintf(&line[pos], "%c", c);
 			}
-			fprintf(stderr, "\n");
+			pos += sprintf(&line[pos], "\n");
+
+			// Make sure the line ends with \0 characters and no data from a previous iteration is left in the buffer.
+			for (j = pos; j < 80; j++)
+			{
+				line[j] = '\0';
+			}
+
+			if (!cb)
+			{
+				fprintf(stderr, "%s", line);
+			}
+			else
+			{
+				cb(line);
+			}
 		}
-		fprintf(stderr, "\n");
+
+		if(!cb)
+			fprintf(stderr, "\n");
 	}
 #endif
 }
@@ -133,7 +170,7 @@ void debug_buffer(const char *data, const int length)
 void debug_buffer_to_file(const char *file, const char *data, const int length)
 {
 #ifndef STRIP_DEBUG_CODE
-	if (debug_level) {
+	if (debug_level > 1) {
 		FILE *f = fopen(file, "wb");
 		fwrite(data, 1, length, f);
 		fflush(f);

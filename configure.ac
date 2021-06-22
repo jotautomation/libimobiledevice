@@ -48,7 +48,7 @@ AC_TYPE_UINT32_T
 AC_TYPE_UINT8_T
 
 # Checks for library functions.
-AC_CHECK_FUNCS([asprintf strcasecmp strdup strerror strndup stpcpy vasprintf])
+AC_CHECK_FUNCS([asprintf strcasecmp strdup strerror strndup stpcpy vasprintf getifaddrs])
 
 AC_CHECK_HEADER(endian.h, [ac_cv_have_endian_h="yes"], [ac_cv_have_endian_h="no"])
 if test "x$ac_cv_have_endian_h" = "xno"; then
@@ -61,6 +61,9 @@ if test "x$ac_cv_have_endian_h" = "xno"; then
     AC_DEFINE(__BYTE_ORDER,1234,[little endian byte order])
   fi
 fi
+
+# idevicescreenshot uses floor
+AC_CHECK_LIB([m],[floor])
 
 # Check for operating system
 AC_MSG_CHECKING([for platform-specific build settings])
