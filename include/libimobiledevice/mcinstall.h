@@ -59,7 +59,7 @@ typedef mcinstall_client_private *mcinstall_client_t; /**< The client handle. */
  * @return MCINSTALL_E_SUCCESS on success, MCINSTALL_E_INVALID_ARG when
  *     client is NULL, or an MCINSTALL_E_* error code otherwise.
  */
-mcinstall_error_t mcinstall_client_new(idevice_t device, lockdownd_service_descriptor_t service, mcinstall_client_t *client);
+LIBIMOBILEDEVICE_API_MSC mcinstall_error_t mcinstall_client_new(idevice_t device, lockdownd_service_descriptor_t service, mcinstall_client_t *client);
 
 /**
  * Starts a new mcinstall service on the specified device and connects to it.
@@ -74,7 +74,7 @@ mcinstall_error_t mcinstall_client_new(idevice_t device, lockdownd_service_descr
  * @return MCINSTALL_E_SUCCESS on success, or an MCINSTALL_E_* error
  *     code otherwise.
  */
-mcinstall_error_t mcinstall_client_start_service(idevice_t device, mcinstall_client_t* client, const char* label);
+LIBIMOBILEDEVICE_API_MSC mcinstall_error_t mcinstall_client_start_service(idevice_t device, mcinstall_client_t* client, const char* label);
 
 /**
  * Disconnects an mcinstall client from the device and frees up the
@@ -85,7 +85,7 @@ mcinstall_error_t mcinstall_client_start_service(idevice_t device, mcinstall_cli
  * @return MCINSTALL_E_SUCCESS on success, MCINSTALL_E_INVALID_ARG when
  *     client is NULL, or an MCINSTALL_E_* error code otherwise.
  */
-mcinstall_error_t mcinstall_client_free(mcinstall_client_t client);
+LIBIMOBILEDEVICE_API_MSC mcinstall_error_t mcinstall_client_free(mcinstall_client_t client);
 
 /**
  * Retrieves all installed mobileconfig profiles
@@ -102,7 +102,7 @@ mcinstall_error_t mcinstall_client_free(mcinstall_client_t client);
  *     still returns MCINSTALL_E_SUCCESS and profiles will just point to an
  *     empty array.
  */
-mcinstall_error_t mcinstall_copy(mcinstall_client_t client, plist_t* profiles);
+LIBIMOBILEDEVICE_API_MSC mcinstall_error_t mcinstall_copy(mcinstall_client_t client, plist_t* profiles);
 
 
 /**
@@ -115,7 +115,7 @@ mcinstall_error_t mcinstall_copy(mcinstall_client_t client, plist_t* profiles);
  * @return MCINSTALL_E_SUCCESS on success, MCINSTALL_E_INVALID_ARG when
  *     client is invalid, or an MCINSTALL_E_* error code otherwise.
  */
-mcinstall_error_t mcinstall_install(mcinstall_client_t client, plist_t profile);
+LIBIMOBILEDEVICE_API_MSC mcinstall_error_t mcinstall_install(mcinstall_client_t client, plist_t profile);
 
 
 /**
@@ -128,7 +128,7 @@ mcinstall_error_t mcinstall_install(mcinstall_client_t client, plist_t profile);
  * @return MCINSTALL_E_SUCCESS on success, MCINSTALL_E_INVALID_ARG when
  *     client is invalid, or an MCINSTALL_E_* error code otherwise.
  */
-mcinstall_error_t mcinstall_install_cloud_config(mcinstall_client_t client, plist_t profile);
+LIBIMOBILEDEVICE_API_MSC mcinstall_error_t mcinstall_install_cloud_config(mcinstall_client_t client, plist_t profile);
 
 
 /**
@@ -146,7 +146,7 @@ mcinstall_error_t mcinstall_install_cloud_config(mcinstall_client_t client, plis
  *     still returns MCINSTALL_E_SUCCESS and profiles will just point to an
  *     empty array.
  */
-mcinstall_error_t mcinstall_get_cloud_config(mcinstall_client_t client, plist_t* profiles);
+LIBIMOBILEDEVICE_API_MSC mcinstall_error_t mcinstall_get_cloud_config(mcinstall_client_t client, plist_t* profiles);
 
 
 /**
@@ -164,7 +164,7 @@ mcinstall_error_t mcinstall_get_cloud_config(mcinstall_client_t client, plist_t*
  *     still returns MCINSTALL_E_SUCCESS and profiles will just point to an
  *     empty array.
  */
-mcinstall_error_t mcinstall_download_cloud_config(mcinstall_client_t client, plist_t* profiles);
+LIBIMOBILEDEVICE_API_MSC mcinstall_error_t mcinstall_download_cloud_config(mcinstall_client_t client, plist_t* profiles);
 
 
 
@@ -185,7 +185,7 @@ mcinstall_error_t mcinstall_download_cloud_config(mcinstall_client_t client, pli
  *     still returns MCINSTALL_E_SUCCESS and profiles will just point to an
  *     empty array.
  */
-mcinstall_error_t mcinstall_remove(mcinstall_client_t client, plist_t profile, const char* profileID);
+LIBIMOBILEDEVICE_API_MSC mcinstall_error_t mcinstall_remove(mcinstall_client_t client, plist_t profile, const char* profileID);
 
 
 
@@ -196,7 +196,7 @@ mcinstall_error_t mcinstall_remove(mcinstall_client_t client, plist_t profile, c
  *
  * @return -1 if client is invalid, or the status code from the last operation
  */
-int mcinstall_get_status_code(mcinstall_client_t client);
+LIBIMOBILEDEVICE_API_MSC int mcinstall_get_status_code(mcinstall_client_t client);
 
 #ifdef __cplusplus
 }
